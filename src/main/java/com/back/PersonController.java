@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequiredArgsConstructor
 public class PersonController {
-    private final PersonService personService = new PersonService();
+    private final PersonService personService;
+
     @GetMapping("/people")
     @ResponseBody
     public String people() {

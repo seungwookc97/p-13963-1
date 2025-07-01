@@ -14,10 +14,13 @@ public class BaseInitData {
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            if(wiseSayingService.count() >0) return;
+            if (wiseSayingService.count() > 0) return;
 
             if (wiseSayingService.findAll().isEmpty()) {
-                wiseSayingService.write("행복은 습관이다. 그것을 몸에 지니라.", "허버트 조지 웰스");
+                wiseSayingService.write("""
+                        - 행복은 습관이다. 그것을 몸에 지니라
+                        - 운동을 열심히 해라
+                        """.stripIndent(), "허버트 조지 웰스");
                 wiseSayingService.write("신념이 있는 곳에 길이 있다.", "마하트마 간디");
                 wiseSayingService.write("행복은 결코 우연히 오지 않는다. 그것은 당신의 행동에 의해 만들어진다.", "엘리노어 루즈벨트");
                 wiseSayingService.write("성공은 최종 목적지가 아니라 여정이다.", "아서 애쉬");

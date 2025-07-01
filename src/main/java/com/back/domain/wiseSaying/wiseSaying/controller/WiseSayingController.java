@@ -2,6 +2,7 @@ package com.back.domain.wiseSaying.wiseSaying.controller;
 
 import com.back.domain.wiseSaying.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.wiseSaying.service.WiseSayingService;
+import com.back.standard.util.service.MarkdownService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WiseSayingController {
     private final WiseSayingService wiseSayingService;
-    private int lastId =0;
+    private final MarkdownService markdownService;
 
-
-    @GetMapping("/wiseSaying/write")
+    @GetMapping("/wiseSayings/write")
     @ResponseBody
     public String write(String content, String author){
 
@@ -35,14 +35,16 @@ public class WiseSayingController {
 
     @GetMapping("/wiseSayings/{id}")
     @ResponseBody
-    public String detail(@PathVariable int id){
+    public String detail(@PathVariable int id) {
         WiseSaying wiseSaying = wiseSayingService.findById(id).get();
+
+        String html = markdownService.toHtml(wiseSaying.getContent());
 
         return """
                 <h1>%d번 명언</h1>
-                <p>내용 : %s</p>
-                <p>작성자 : %s</p>
-                """.formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
+                <p>작가 : %s</p>
+                <p>%s</p>
+                """.formatted(wiseSaying.getId(),wiseSaying.getAuthor(), html);
     }
     @GetMapping("/wiseSayings")
     @ResponseBody
@@ -57,7 +59,7 @@ public class WiseSayingController {
 
     }
 
-    @GetMapping("/wiseSaying/{id}/delete")
+    @GetMapping("/wiseSayings/{id}/delete")
     @ResponseBody
     public String delete(@PathVariable int id){
         WiseSaying wiseSaying = wiseSayingService.findById(id)
@@ -70,7 +72,7 @@ public class WiseSayingController {
 
 
 
-    @GetMapping("/wiseSaying/{id}/modify")
+    @GetMapping("/wiseSayings/{id}/modify")
     @ResponseBody
     public String modify(
             @PathVariable int id,
